@@ -18,9 +18,25 @@
     "editorType": [
       "figma"
     ],
-    "id": "preact-rectangles",
-    "name": "Preact Rectangles",
+    "id": "figma-workspace",
+    "name": "Figma Workspace",
     "main": "src/main.ts",
-    "ui": "src/ui.tsx"
+    "ui": "src/ui.tsx",
+    "documentAccess": "dynamic-page",
+    "permissions": [
+      "currentuser"
+    ],
+    "menu": [
+      {
+        "name": "Open Workspace",
+        "command": "show-workspace"
+      }
+    ],
+    "relaunchButtons": [
+      {
+        "name": "Reopen Workspace",
+        "command": "show-workspace"
+      }
+    ]
   }
 }

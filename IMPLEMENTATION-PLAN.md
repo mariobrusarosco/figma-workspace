@@ -115,7 +115,7 @@ figma-workspace/
 **Files to Create Initially:**
 1. `src/main.ts` - Plugin entry point
 2. `src/ui.tsx` - Main UI with tab structure
-3. `src/components/TabSwitcher.tsx` - Tab navigation
+3. `src/components/TabSwitcher.tsx` - Tab navigation0
 4. `src/core/state-manager.ts` - State management
 5. `src/utils/messaging.ts` - Communication layer
 

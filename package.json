@@ -29,14 +29,16 @@
     "menu": [
       {
         "name": "Open Workspace",
-        "command": "show-workspace"
+        "main": "src/main.ts",
+        "ui": "src/ui.tsx"
       }
     ],
-    "relaunchButtons": [
-      {
+    "relaunchButtons": {
+      "src/main.ts--default": {
         "name": "Reopen Workspace",
-        "command": "show-workspace"
+        "main": "src/main.ts",
+        "ui": "src/ui.tsx"
       }
-    ]
+    }
   }
 }

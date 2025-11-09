@@ -46,15 +46,17 @@ npx --yes create-figma-plugin
     "menu": [
       {
         "name": "Open Workspace",
-        "main": { "command": "show-workspace" }
+        "main": "src/main.ts",
+        "ui": "src/ui.tsx"
       }
     ],
-    "relaunchButtons": [
-      {
+    "relaunchButtons": {
+      "src/main.ts--default": {
         "name": "Reopen Workspace",
-        "main": { "command": "show-workspace" }
+        "main": "src/main.ts",
+        "ui": "src/ui.tsx"
       }
-    ]
+    }
   }
 }
 ```
@@ -63,7 +65,7 @@ npx --yes create-figma-plugin
 - `documentAccess: "dynamic-page"` - Access current page for navigation
 - `permissions: ["currentuser"]` - Access user info for metadata
 - Single menu command to launch the plugin
-- Relaunch button for quick access
+- Relaunch button for quick access (uses command ID `src/main.ts--default`, derived from the `main` entry)
 
 ---
 

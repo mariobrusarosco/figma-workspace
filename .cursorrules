@@ -1,0 +1,185 @@
+# Figma Workspace Plugin - Cursor AI Rules
+
+## Project Context
+
+This is a **Figma Plugin** project that provides:
+1. **Visual Navigation** - Navigate massive Figma files instantly with a visual command center
+2. **Flexible Components** - Create components with dynamic content slots while maintaining component connection
+
+**Key Documentation:**
+- `CLAUDE.md` - Detailed project architecture and technical specifications
+- `figma-workspace-prd.md` - Product requirements document
+- `IMPLEMENTATION-PLAN.md` - Development phases and implementation steps
+
+## Technology Stack
+
+- **Framework**: Create Figma Plugin (official toolkit)
+- **UI**: Preact/React with TypeScript
+- **Build**: esbuild
+- **Package Manager**: yarn (ALWAYS use yarn, never npm)
+
+## Code Style & Conventions
+
+### File Naming
+- Use **kebab-case** for all file names (e.g., `slot-manager.ts`, `navigation-manager.ts`)
+- Component files: `component-name.tsx`
+- Utility files: `utility-name.ts`
+
+### Imports
+- Use **named exports** for components and hooks
+- Use **arrow functions** for components and hooks
+- Import types using the `type` keyword: `import type { ICreateAccountForm } from "../schemas/investment-account"`
+
+### Path Imports
+- Always use the `@/` path alias for imports from the `app/` directory
+- Use `@/domains/` for domain-specific modules
+- Use `@/config/` for configuration imports
+- Use `@/routes/` for route imports
+- Never use relative imports like `../` or `./` when importing from other domains
+
+**Examples:**
+✅ `import CreateAccount from '@/domains/accounts/components/create-account'`
+✅ `import { Button } from '@/domains/ui-system/components/button'`
+❌ `import CreateAccount from '../../../domains/accounts/components/create-account'`
+
+## Figma Plugin Specifics
+
+### Critical API Usage
+- `figma.currentPage` - Access current page
+- `node.setPluginData()` / `node.getPluginData()` - Store slot metadata on nodes
+- `figma.on('selectionchange')` - Track user selections
+- `node.findAll()` - Find component instances
+- `figma.clientStorage` - Persist user preferences
+
+### Performance Requirements
+- Plugin load: < 1 second
+- Slot detection: < 500ms per component
+- Content injection: < 1 second
+- Sync operation: < 2 seconds for 100 instances
+- Thumbnail generation: < 100ms each
+- Memory usage: < 50MB for typical files
+
+### Data Storage Patterns
+- **Plugin Data**: Use `setPluginData()` / `getPluginData()` on nodes for slot metadata
+- **Client Storage**: Use `figma.clientStorage` for user preferences (theme, favorites, recent items)
+- Always version data structures for migration support
+
+## Architecture Patterns
+
+### Core Components
+- `slot-manager.ts` - Slot definition & tracking
+- `sync-engine.ts` - Component sync logic
+- `navigation-manager.ts` - File scanning & navigation
+- `state-manager.ts` - Plugin state management
+
+### Slot Synchronization Strategy
+- Track component version/changes
+- Identify what changed (structure vs. style)
+- Preserve slot content during updates
+- Handle conflicts gracefully (with rollback)
+- Batch operations efficiently
+
+### Performance Optimization
+- Lazy load slot data (don't scan entire file upfront)
+- Batch operations for multiple instances
+- Incremental sync (not full rebuild)
+- Debounced selection tracking
+- Efficient thumbnail generation with caching
+
+## Development Workflow
+
+### Before Making Changes
+1. Read `CLAUDE.md` for architecture context
+2. Check `IMPLEMENTATION-PLAN.md` for current phase requirements
+3. Review existing code patterns in `src/core/` and `src/ui/`
+
+### Testing Considerations
+- Test with files of varying sizes:
+  - Small: 10 components, 50 instances
+  - Medium: 50 components, 500 instances
+  - Large: 200 components, 2000 instances
+  - Enterprise: 500+ components, 5000+ instances
+
+### Critical Test Scenarios
+1. Component updates with slot content preservation
+2. Deep nesting (components with slots containing slotted components)
+3. Large content in slots (1000+ nodes)
+4. Rapid consecutive updates
+5. Navigation performance with 500+ screens
+
+## UI/UX Guidelines
+
+### Plugin Window
+- **Type**: Floating/dockable panel
+- **Default**: 400w × 600h (resizable, min 320×400, max 600×100%h)
+- **Collapsed**: 60×60 floating button
+- **Theme**: Auto-detect from Figma (light/dark)
+
+### Design Principles
+- Floating button (collapsed): 60×60 draggable circle
+- Expanded panel: Tab switcher at top (Navigation | Slot Replacement)
+- Responsive: Adjust grid columns based on panel width (1-3 columns)
+- Support keyboard shortcuts for power users
+
+## Git & Commands
+
+- **DO NOT** run Git commands automatically
+- Always use **yarn** for package management
+- Use Git Bash commands (not PowerShell)
+
+## Documentation
+
+### When Creating Documentation
+- Store ADRs (Architecture Decision Records) in `docs/decisions/`
+- Developer guides go in `docs/guides/`
+- Update `README.md` to point to these resources
+- When you receive "LOG THE FIX" input, create a markdown file in `docs/fixing-log/` with issue context and solution
+
+### Planning Documents
+- Store phase plans in `docs/plan/`
+- Each phase should have its own file
+- Include checklists that get marked as checked after completing tasks
+
+## Error Handling
+
+- Implement rollback for failed sync operations
+- Validate slot references on component updates
+- Handle conflicts gracefully with user feedback
+- Use structured logging for debugging
+
+## Code Quality
+
+- Write TypeScript with proper types (avoid `any`)
+- Follow Figma Plugin API best practices
+- Optimize for performance (see requirements above)
+- Ensure data integrity with versioning and validation
+- Write self-documenting code with clear variable names
+
+## Custom Commands
+
+### "Write a Topic" Command
+
+When the user says **"Write a Topic"**, follow the process below:
+
+#### Create a Garden Topic
+
+To create a Garden Topic:
+
+1. **Access the sibling project**: Look for the project named `garden` as a sibling project at `./garden` (or `/home/coding/garden`)
+2. **Understand the structure**: Review how topics are created via `.mdx` files in that project
+   - Check existing topic examples in `domains/garden-content/topics/`
+   - Review the `.cursorrules` file in the garden project for MDX creation patterns
+   - Understand the frontmatter structure and component usage
+3. **Ask for focus**: Ask the user which part of the current work (figma-workspace project) should be the focus of the topic
+4. **Wait for topic name**: The user will provide the name of the topic - do not proceed until you receive it
+5. **Scope limitation**: Only create the topic file - do not make other changes to the garden project
+
+**Important**: This command bridges knowledge from the figma-workspace project into the garden knowledge base. Focus on documenting concepts, patterns, or learnings from this project.
+
+## When in Doubt
+
+1. Check `CLAUDE.md` for detailed technical specifications
+2. Review existing code patterns in the codebase
+3. Refer to Figma Plugin API documentation: https://figma.com/plugin-docs/
+4. Check Create Figma Plugin docs: https://yuanqing.github.io/create-figma-plugin/
+
